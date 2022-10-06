@@ -21,9 +21,25 @@ const articleSchema = {
 const Article = mongoose.model("Article", articleSchema);
 
 app.get("/articles", function(req, res){
+  //retrieve all articles
   Article.find({}, function(err, articles){
     if(!err) {
       res.send(articles);
+    } else {
+      res.send(err);
+    }
+  });
+});
+
+app.post("/articles", function(req, res){
+  let article = new Article({
+    title: req.body.title,
+    content: req.body.content
+  });
+
+  article.save(function(err){
+    if(!err) {
+      res.send("Successfully added new article");
     } else {
       res.send(err);
     }
