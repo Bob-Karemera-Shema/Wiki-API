@@ -20,7 +20,10 @@ const articleSchema = {
 //create a mongoose article model
 const Article = mongoose.model("Article", articleSchema);
 
-app.get("/articles", function(req, res){
+//Requests targetting all articles
+
+app.route("/articles")
+.get(function(req, res){
   //retrieve all articles
   Article.find({}, function(err, articles){
     if(!err) {
@@ -29,9 +32,11 @@ app.get("/articles", function(req, res){
       res.send(err);
     }
   });
-});
+})
 
-app.post("/articles", function(req, res){
+.post(function(req, res){
+  //add new article to DB
+
   let article = new Article({
     title: req.body.title,
     content: req.body.content
@@ -44,6 +49,37 @@ app.post("/articles", function(req, res){
       res.send(err);
     }
   });
+})
+
+.delete(function(req, res){
+  //Delete all articles from DB
+
+  Article.deleteMany({}, function(err){
+    if(!err) {
+      res.send("Successfully deleted all articles");
+    } else {
+      res.send(err);
+    }
+  });
+});
+
+//Requests targetting a specific article
+
+app.route("/articles/:articleTitle")
+.get(function(req, res){
+ Article.findOne({title: req.params.articleTitle}, function(err, article){
+   if(!err) {
+     res.send(article);
+   } else {
+     res.send("Article not found!");
+   }
+ });
+})
+
+.put(function(req, res){
+  Article.update(
+    
+  )
 });
 
 app.listen(3000, function(){
