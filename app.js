@@ -67,6 +67,7 @@ app.route("/articles")
 
 app.route("/articles/:articleTitle")
 .get(function(req, res){
+  //Retrieve specific article
  Article.findOne({title: req.params.articleTitle}, function(err, article){
    if(!err) {
      res.send(article);
@@ -77,13 +78,14 @@ app.route("/articles/:articleTitle")
 })
 
 .put(function(req, res){
+  //Overwrite existing article
   Article.updateOne(
     {title: req.params.articleTitle},
     {title: req.body.title, content: req.body.content},
     {overwrite: true},
     function(err) {
       if(!err) {
-        res.send("Successfully updated article");
+        res.send("Successfully updated article.");
       } else {
         res.send(err);
       }
@@ -92,10 +94,29 @@ app.route("/articles/:articleTitle")
 })
 
 .patch(function(req, res){
+  //Update parts of existing article
   Article.updateOne(
     {title: req.params.articleTitle},
-    {$set: req.body}
+    {$set: req.body},
+    function(err){
+      if(!err) {
+        res.send("Successfully updated article.");
+      } else {
+        res.send(err);
+      }
+    }
   );
+})
+
+.delete(function(req, res){
+  //Delete specific article from DB
+  Article.deleteOne({title: req.params.articleTitle}, function(err){
+    if(!err) {
+      res.send("Successfully deleted all articles");
+    } else {
+      res.send(err);
+    }
+  });
 });
 
 app.listen(3000, function(){
